@@ -14,7 +14,7 @@ module.exports = function(url, cb) {
     headers = {};
     for(key in res.headers) {
       var new_key = key.replace(/-/g, '_');
-      headers[new_key] = res.headers[key] 
+      headers[new_key] = res.headers[key];
     }
     cb(headers);
   });

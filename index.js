@@ -1,21 +1,20 @@
-var http = require('http');
-var https = require('https');
-var protocol;
-var headers;
+var http = require('http')
+var https = require('https')
 
-module.exports = function(url, cb) {
-  if(url.indexOf('https') === 0)
-    protocol = https;
-  else
-    protocol = http;
+module.exports = function (url, cb) {
+  var protocol
+  
+  if (url.slice(0, 5) === 'https') protocol = https
+  else protocol = http
 
-  var req = protocol.get(url, function(res) {
-    req.abort();
-    headers = {};
-    for(key in res.headers) {
-      var new_key = key.replace(/-/g, '_');
-      headers[new_key] = res.headers[key];
-    }
-    cb(headers);
-  });
-};
+  var req = protocol.get(url, function (res) {
+    req.abort()
+    cb(null, res.statusCode, res.headers)
+  })
+  
+  req.on('error', function (err) {
+    cb(err)
+  })
+
+  return req
+}
